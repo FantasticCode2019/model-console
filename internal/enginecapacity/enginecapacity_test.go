@@ -500,3 +500,19 @@ func TestProbeFreeTokenRetainsDeclaredConcurrency(t *testing.T) {
 		t.Errorf("unexpected capacity provenance: %+v", got)
 	}
 }
+
+func TestProbeStrataRetainsDeclaredCapacity(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Errorf("Strata must not probe another engine's capacity endpoint: %s", r.URL.Path)
+		w.WriteHeader(http.StatusNotFound)
+	}))
+	defer srv.Close()
+	got := Probe(context.Background(), Options{
+		Kind:      config.EngineStrata,
+		EngineURL: srv.URL,
+		Args:      parseArgs(t, config.EngineStrata, "--context 32768 --parallel 2"),
+	})
+	if got.ContextSize != 32768 || got.MaxConcurrency != 2 || got.PoolTokens != 0 {
+		t.Fatalf("unexpected Strata capacity: %+v", got)
+	}
+}

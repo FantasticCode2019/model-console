@@ -60,6 +60,8 @@ func ParseEngineArgs(kind EngineKind, raw string) (EngineArgs, error) {
 		return parseCmdlineArgs(raw, vllmKnownFlags)
 	case EngineFreeToken:
 		return parseCmdlineArgs(raw, freetokenKnownFlags)
+	case EngineStrata:
+		return parseCmdlineArgs(raw, strataKnownFlags)
 	case EngineSGLang:
 		return parseCmdlineArgs(raw, sglangKnownFlags)
 	case EngineLlamaCpp:

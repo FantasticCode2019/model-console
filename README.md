@@ -67,6 +67,17 @@ service `http://freetoken:1919`. FreeToken `ft serve` flags are accepted through
 Unknown flags are preserved. `--kv-reserve-tokens` does not declare a context
 window or a fixed KV pool capacity.
 
+### Strata
+
+Set `ENGINE_KIND=strata` to proxy the sibling service `http://strata:8080`.
+`ENGINE_ARGS` contains Strata **setup.py** options; `--context` and `--parallel`
+declare context and concurrency. KV pool capacity remains unknown. The wrapper
+uses the downloaded GGUF directory, prepares Strata's pack/MTP cache, and
+relaunches the API server when Model Console changes engine arguments.
+
+The NVIDIA manual-test chart and build instructions are in
+[strataqwen38iq4xsv3/README.md](strataqwen38iq4xsv3/README.md).
+
 ## Development
 
 Go 1.23 or newer is required by the module. The release and security checks use

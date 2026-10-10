@@ -14,6 +14,7 @@ func TestDeriveEngineURL(t *testing.T) {
 		EngineLlamaCpp:  "http://llamacpp:8081",
 		EngineSGLang:    "http://sglang:30000",
 		EngineFreeToken: "http://freetoken:1919",
+		EngineStrata:    "http://strata:8080",
 		EngineEmbed:     "http://embed:8080",
 		EngineClipEmbed: "http://clipembed:8080",
 		EngineOCR:       "http://ocradapter:8080",

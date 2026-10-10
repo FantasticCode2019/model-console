@@ -236,6 +236,7 @@ var freetokenKnownFlags = map[string]string{
 // is absent because its flag needs arithmetic; see
 // deriveLlamacppContextSize.
 var contextSizeKeys = map[EngineKind]string{
+	EngineStrata: "context",
 	EngineVLLM:   "max_model_len",
 	EngineSGLang: "context_length",
 	EngineOllama: "num_ctx",
@@ -251,9 +252,22 @@ var contextSizeKeys = map[EngineKind]string{
 // not refused, which is exactly why the number has to travel: a caller
 // who cannot see it reads its own queueing as the model being slow.
 var maxConcurrencyKeys = map[EngineKind]string{
+	EngineStrata:    "parallel",
 	EngineFreeToken: "max_running_requests",
 	EngineLlamaCpp:  "parallel",
 	EngineVLLM:      "max_num_seqs",
 	EngineSGLang:    "max_running_requests",
 	EngineOllama:    "num_parallel",
+}
+
+// Strata ENGINE_ARGS are setup.py options, not the native engine's argv.
+// setup.py writes the native configuration before serve/server.py starts.
+var strataKnownFlags = map[string]string{
+	"--context":          "context",
+	"--parallel":         "parallel",
+	"--kv":               "kv",
+	"--kv-streaming":     "kv_streaming",
+	"--low-ram":          "low_ram",
+	"--vram-reserve-mib": "vram_reserve_mib",
+	"--draft-vocab":      "draft_vocab",
 }
