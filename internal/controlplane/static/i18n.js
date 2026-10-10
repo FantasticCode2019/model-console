@@ -469,6 +469,8 @@
     ollama: 'Ollama',
     vllm: 'vLLM',
     sglang: 'SGLang',
+    freetoken: 'FreeToken',
+    strata: 'Strata',
   };
   function engineName(kind) {
     if (!kind) return '';
