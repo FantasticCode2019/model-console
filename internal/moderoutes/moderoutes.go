@@ -59,6 +59,7 @@ type Route struct {
 const (
 	PathModels           = "/v1/models"
 	PathEmbeddings       = "/v1/embeddings"
+	PathEmbeddingTasks   = "/v1/embedding-tasks"
 	PathRerank           = "/v1/rerank"
 	PathSystemOne        = "/v1/systemone"
 	PathOCR              = "/v1/ocr"
@@ -80,6 +81,9 @@ var declared = map[config.ModelType][]Route{
 	config.ModelEmbedding: {
 		{http.MethodGet, PathModels},
 		{http.MethodPost, PathEmbeddings},
+		{http.MethodPost, PathEmbeddingTasks},
+		{AnyMethod, PathTask},
+		{AnyMethod, PathTaskResult},
 	},
 	config.ModelRerank: {
 		{http.MethodGet, PathModels},

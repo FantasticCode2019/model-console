@@ -62,7 +62,7 @@ func TestDeriveMaxConcurrency_PerEngineFlag(t *testing.T) {
 // launch flags here, so nothing can be derived for them.
 func TestDeriveMaxConcurrency_NonLLMEnginesDeriveNothing(t *testing.T) {
 	t.Parallel()
-	for _, kind := range []EngineKind{EngineEmbed, EngineClipEmbed, EngineAudio, EngineOCR, EngineRerank, ""} {
+	for _, kind := range []EngineKind{EngineEmbed, EngineClipEmbed, EngineMultimodalEmbed, EngineAudio, EngineOCR, EngineRerank, ""} {
 		args, err := ParseEngineArgs(kind, "")
 		if err != nil && kind != "" {
 			t.Fatalf("kind=%s: %v", kind, err)

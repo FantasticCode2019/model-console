@@ -349,6 +349,10 @@ func TestAllSupports_RouterOrder(t *testing.T) {
 		"supports_logit_bias",
 		"supports_user",
 		"supports_embedding_image_input",
+		"supports_embedding_audio_input",
+		"supports_embedding_video_input",
+		"supports_embedding_interleaved_input",
+		"supports_embedding_async",
 	})
 }
 

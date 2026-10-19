@@ -115,6 +115,7 @@ const (
 	// spelling here would let a row describe a path nothing serves.
 	pathModels           = moderoutes.PathModels
 	pathEmbeddings       = moderoutes.PathEmbeddings
+	pathEmbeddingTasks   = moderoutes.PathEmbeddingTasks
 	pathRerank           = moderoutes.PathRerank
 	pathSystemOne        = moderoutes.PathSystemOne
 	pathOCR              = moderoutes.PathOCR
@@ -200,8 +201,8 @@ func (s *Server) buildEndpointCatalog() []EndpointInfo {
 	// The async task contract belongs to whichever engine runs
 	// work a request cannot wait out — ocr, audio and tts today, image next. llm-init proxies it
 	// and knows nothing about the documents.
-	tasksOn := dataPlaneOn && (mode == config.ModelOCR || mode == config.ModelAudio || mode == config.ModelTTS)
-	tasksOffReasons := []string{"not shown unless MODEL_MODE=ocr|audio|tts (catalog only)"}
+	tasksOn := dataPlaneOn && (mode == config.ModelEmbedding || mode == config.ModelOCR || mode == config.ModelAudio || mode == config.ModelTTS)
+	tasksOffReasons := []string{"not shown unless MODEL_MODE=embedding|ocr|audio|tts (catalog only)"}
 	if !dataPlaneOn {
 		tasksOffReasons = dataPlaneReason
 	}
@@ -294,6 +295,11 @@ func (s *Server) buildEndpointCatalog() []EndpointInfo {
 			Group:       groupOpenAI,
 			Description: "Embeddings (catalog highlight when MODEL_MODE=embedding).",
 			Available:   dataPlaneOn, Reasons: unlessOn(dataPlaneOn, dataPlaneReason)},
+		{Method: mPOST, Path: pathEmbeddingTasks, Category: categoryOpenAI,
+			Group:       groupTasks,
+			Description: "Submit an asynchronous multimodal embedding task (multipart audio/video/interleaved input).",
+			Available:   tasksOn && mode == config.ModelEmbedding, Reasons: unlessOn(tasksOn && mode == config.ModelEmbedding, tasksOffReasons),
+			CurlHint: "curl -sS -X POST http://HOST:PORT/v1/embedding-tasks -F 'media=@clip.mp4'"},
 		{Method: mPOST, Path: pathRerank, Category: categoryOpenAI,
 			Group:       groupOpenAI,
 			Description: "Rerank documents (catalog highlight when MODEL_MODE=rerank).",

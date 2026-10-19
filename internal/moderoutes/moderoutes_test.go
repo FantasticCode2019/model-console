@@ -99,6 +99,12 @@ func TestDeclares_MethodIsPartOfTheRow(t *testing.T) {
 	if !Declares(config.ModelEmbedding, "POST", PathEmbeddings) {
 		t.Error("POST /v1/embeddings should be declared")
 	}
+	if !Declares(config.ModelEmbedding, "POST", PathEmbeddingTasks) {
+		t.Error("POST /v1/embedding-tasks should be declared")
+	}
+	if !Declares(config.ModelEmbedding, "DELETE", PathTask) {
+		t.Error("embedding task routes should pass through engine-declared methods")
+	}
 	// AnyMethod exists because the async task contract is the engine's:
 	// a verb it declares on a task path is that mode's route even though
 	// the catalogue never listed it.
