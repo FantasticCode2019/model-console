@@ -331,17 +331,35 @@ func buildArgs(cfg Config) []string {
 	if cfg.HFFile != "" {
 		args = append(args, cfg.HFFile)
 	}
+	// Exact allow-list entries are filenames, not glob patterns. Pass them as
+	// positional filenames so this works with both generations of the hf CLI:
+	// the argparse implementation treats `--include` as one multi-value option,
+	// while the newer Click implementation accepts repeated scalar options.
+	// Repeating `--include` therefore silently keeps only the last pattern on
+	// the former, which is especially dangerous for sharded ONNX models.
+	exactIncludes := len(cfg.AllowPatterns) > 0
+	for _, p := range cfg.AllowPatterns {
+		if p == "" || strings.ContainsAny(p, "*?[") {
+			exactIncludes = false
+			break
+		}
+	}
+	if exactIncludes {
+		args = append(args, cfg.AllowPatterns...)
+	}
 	if cfg.CacheDir != "" {
 		args = append(args, "--cache-dir", cfg.CacheDir)
 	}
 	if cfg.Revision != "" && cfg.Revision != defaultHFRef {
 		args = append(args, "--revision", cfg.Revision)
 	}
-	for _, p := range cfg.AllowPatterns {
-		if p == "" {
-			continue
+	if !exactIncludes {
+		for _, p := range cfg.AllowPatterns {
+			if p == "" {
+				continue
+			}
+			args = append(args, "--include", p)
 		}
-		args = append(args, "--include", p)
 	}
 	for _, p := range cfg.ExcludePatterns {
 		if p == "" {
