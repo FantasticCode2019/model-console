@@ -176,7 +176,7 @@ func TestParseEngineArgs_SGLangCmdline(t *testing.T) {
 
 func TestParseEngineArgs_EmptyRaw(t *testing.T) {
 	t.Parallel()
-	for _, kind := range []EngineKind{EngineOllama, EngineVLLM, EngineLlamaCpp, EngineSGLang, EngineEmbed, EngineClipEmbed, EngineOCR, EngineRerank} {
+	for _, kind := range []EngineKind{EngineOllama, EngineVLLM, EngineLlamaCpp, EngineSGLang, EngineEmbed, EngineClipEmbed, EngineMultimodalEmbed, EngineOCR, EngineRerank} {
 		got, err := ParseEngineArgs(kind, "")
 		if err != nil {
 			t.Errorf("kind=%s: %v", kind, err)
@@ -204,7 +204,7 @@ func TestParseEngineArgs_UnbalancedQuoteFailFast(t *testing.T) {
 
 func TestParseEngineArgs_EmbedEmpty(t *testing.T) {
 	t.Parallel()
-	for _, kind := range []EngineKind{EngineEmbed, EngineClipEmbed, EngineOCR, EngineRerank, EngineMusic, EngineSystemOne} {
+	for _, kind := range []EngineKind{EngineEmbed, EngineClipEmbed, EngineMultimodalEmbed, EngineOCR, EngineRerank, EngineMusic, EngineSystemOne} {
 		got, err := ParseEngineArgs(kind, "")
 		if err != nil {
 			t.Fatalf("kind=%s err: %v", kind, err)
@@ -217,7 +217,7 @@ func TestParseEngineArgs_EmbedEmpty(t *testing.T) {
 
 func TestParseEngineArgs_EmbedRejectsNonEmpty(t *testing.T) {
 	t.Parallel()
-	for _, kind := range []EngineKind{EngineEmbed, EngineClipEmbed, EngineOCR, EngineRerank, EngineMusic, EngineSystemOne} {
+	for _, kind := range []EngineKind{EngineEmbed, EngineClipEmbed, EngineMultimodalEmbed, EngineOCR, EngineRerank, EngineMusic, EngineSystemOne} {
 		_, err := ParseEngineArgs(kind, "EMBED_DEVICE=cpu")
 		if err == nil {
 			t.Fatalf("kind=%s: expected error when ENGINE_ARGS set", kind)

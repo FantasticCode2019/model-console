@@ -53,16 +53,17 @@ func (l *loader) loadEngine() {
 // Conventional sibling-engine URLs derived from ENGINE_KIND. They match
 // the deploy/compose/<kind>.yml service names and upstream default ports.
 const (
-	defaultOllamaURL    = "http://ollama:11434"
-	defaultVLLMURL      = "http://vllm:8000"
-	defaultLlamaCppURL  = "http://llamacpp:8081"
-	defaultSGLangURL    = "http://sglang:30000"
-	defaultFreeTokenURL = "http://freetoken:1919"
-	defaultStrataURL    = "http://strata:8080"
-	defaultEmbedURL     = "http://embed:8080"
-	defaultClipEmbedURL = "http://clipembed:8080"
-	defaultAudioURL     = "http://audio-engine:8000"
-	defaultMusicURL     = "http://music-engine:8001"
+	defaultOllamaURL          = "http://ollama:11434"
+	defaultVLLMURL            = "http://vllm:8000"
+	defaultLlamaCppURL        = "http://llamacpp:8081"
+	defaultSGLangURL          = "http://sglang:30000"
+	defaultFreeTokenURL       = "http://freetoken:1919"
+	defaultStrataURL          = "http://strata:8080"
+	defaultEmbedURL           = "http://embed:8080"
+	defaultClipEmbedURL       = "http://clipembed:8080"
+	defaultMultimodalEmbedURL = "http://multimodalembed:8080"
+	defaultAudioURL           = "http://audio-engine:8000"
+	defaultMusicURL           = "http://music-engine:8001"
 	// OCRAdapter (not llamacpp): proxy Ready probes GET /v1/models here.
 	defaultOCRAdapterURL = "http://ocradapter:8080"
 	defaultRerankURL     = "http://rerank:8080"
@@ -90,6 +91,8 @@ func deriveEngineURL(kind EngineKind) string {
 		return defaultEmbedURL
 	case EngineClipEmbed:
 		return defaultClipEmbedURL
+	case EngineMultimodalEmbed:
+		return defaultMultimodalEmbedURL
 	case EngineAudio:
 		return defaultAudioURL
 	case EngineOCR:
