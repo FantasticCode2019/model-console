@@ -2,15 +2,15 @@
 
 # Stage 1: build a static Linux binary with version metadata injected.
 #
-# Builder is pinned to golang:1.26.9-alpine to match the CI test/lint/vulncheck
-# floor pinned in .github/workflows/ci.yml (`go-version: "1.26.9"`). The
+# Builder is pinned to golang:1.26.10-alpine to match the CI test/lint/vulncheck
+# floor pinned in .github/workflows/ci.yml (`go-version: "1.26.10"`). The
 # downstream-consumer floor in go.mod (`go 1.23.0`) is intentionally
 # separate — see CHANGELOG entry for v1.0.3.
 #
 # Pinned by digest for reproducible builds (the tag is kept inline so
 # Dependabot's docker ecosystem can resolve + bump both in lockstep).
 # Digest is the multi-arch image index (covers amd64 + arm64).
-FROM --platform=$BUILDPLATFORM golang:1.26.9-alpine@sha256:3082400e369fa24d5fc60bca20edab3f6d604e0c5a690ec66b295eff4dd87ade AS builder
+FROM --platform=$BUILDPLATFORM golang:1.26.10-alpine@sha256:27f2d3b83cfc5803c8078f8e730af0f7c431bf067afaec8f60a36fb763187cba AS builder
 
 ARG TARGETOS
 ARG TARGETARCH
