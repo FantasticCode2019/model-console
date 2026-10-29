@@ -22,6 +22,9 @@ func DeriveContextSize(kind EngineKind, args EngineArgs) (int, bool) {
 	if kind == EngineLlamaCpp {
 		return deriveLlamacppContextSize(args)
 	}
+	if kind == EngineOllama {
+		return ollamaContextWindow(args)
+	}
 	key, ok := contextSizeKeys[kind]
 	if !ok {
 		return 0, false
@@ -31,6 +34,21 @@ func DeriveContextSize(kind EngineKind, args EngineArgs) (int, bool) {
 		return 0, false
 	}
 	return n, true
+}
+
+// ollamaContextWindow reads the window the daemon was asked for.
+// OLLAMA_NUM_CTX is the request option num_ctx. OLLAMA_CONTEXT_LENGTH is
+// the daemon default the charts set, and it is not injected onto
+// /api/chat. Either pins the window. When a card sets both, num_ctx is
+// what a chat request sends, so it wins.
+func ollamaContextWindow(args EngineArgs) (int, bool) {
+	if n, ok := args.GetInt("num_ctx"); ok && n > 0 {
+		return n, true
+	}
+	if n, ok := args.GetInt("context_length"); ok && n > 0 {
+		return n, true
+	}
+	return 0, false
 }
 
 // deriveLlamacppContextSize reproduces the `n_ctx_slot` the server prints

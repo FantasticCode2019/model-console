@@ -100,6 +100,16 @@ func TestDerivePoolTokens_Ollama(t *testing.T) {
 			want:  32768, wantK: true,
 		},
 		{
+			name:  "context length is the window",
+			known: map[string]string{"context_length": "131072", "num_parallel": "1"},
+			want:  131072, wantK: true,
+		},
+		{
+			name:  "num_ctx wins over context length",
+			known: map[string]string{"num_ctx": "4096", "context_length": "131072", "num_parallel": "1"},
+			want:  4096, wantK: true,
+		},
+		{
 			// Ollama's own default for num_parallel is four or one
 			// depending on free memory, so half a product is no product.
 			name:  "width unpinned leaves the pool unknown",

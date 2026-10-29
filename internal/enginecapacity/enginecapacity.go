@@ -424,9 +424,9 @@ func probeOllama(ctx context.Context, c *client, model string, args config.Engin
 	}
 
 	var warnings []string
-	if want, ok := args.GetInt("num_ctx"); ok && r.contextSize > 0 && want != r.contextSize {
+	if want, ok := config.DeriveContextSize(config.EngineOllama, args); ok && r.contextSize > 0 && want != r.contextSize {
 		warnings = append(warnings, fmt.Sprintf(
-			"ollama: running with context_length=%d, not the %d that OLLAMA_NUM_CTX asked for; "+
+			"ollama: running with context_length=%d, not the %d that ENGINE_ARGS asked for; "+
 				"the daemon lowered it to fit memory",
 			r.contextSize, want))
 	}
