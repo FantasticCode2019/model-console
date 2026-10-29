@@ -108,7 +108,7 @@ func rewriteBodyCap(path string, kind config.EngineKind) int {
 	case pathChatCompletions, pathAPIChatCompletions, pathResponses:
 		return maxVisionRewriteBody
 	case pathEmbeddings:
-		if kind == config.EngineClipEmbed {
+		if kind == config.EngineClipEmbed || kind == config.EngineMultimodalEmbed {
 			return maxVisionRewriteBody
 		}
 		return maxRewriteBody

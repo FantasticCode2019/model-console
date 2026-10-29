@@ -41,8 +41,8 @@ func TestNew_Ollama(t *testing.T) {
 func TestNew_ProxyKinds(t *testing.T) {
 	t.Parallel()
 	for _, k := range []config.EngineKind{
-		config.EngineVLLM, config.EngineLlamaCpp, config.EngineSGLang,
-		config.EngineEmbed, config.EngineClipEmbed, config.EngineOCR, config.EngineRerank,
+		config.EngineVLLM, config.EngineLlamaCpp, config.EngineSGLang, config.EngineFreeToken, config.EngineStrata,
+		config.EngineEmbed, config.EngineClipEmbed, config.EngineMultimodalEmbed, config.EngineOCR, config.EngineRerank,
 		config.EngineSystemOne,
 	} {
 		k := k

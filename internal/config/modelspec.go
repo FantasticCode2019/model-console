@@ -132,10 +132,15 @@ var allSupports = []string{
 	"supports_response_format",
 	"supports_logit_bias",
 	"supports_user",
-	// Embedding (1). An embedding model that places images in the same
+	// Embedding (5). These flags describe embedding inputs and must not be
+	// confused with chat-model multimodal input capabilities above.
 	// vector space as text (Jina CLIP, Cohere embed-*-image). Not
 	// supports_vision, which is a chat model looking at an image.
 	"supports_embedding_image_input",
+	"supports_embedding_audio_input",
+	"supports_embedding_video_input",
+	"supports_embedding_interleaved_input",
+	"supports_embedding_async",
 }
 
 // MIRROR OF:

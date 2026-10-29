@@ -366,6 +366,22 @@ func TestBuildArgs_AllOptionsForwarded(t *testing.T) {
 	}
 }
 
+func TestBuildArgs_ExactIncludesArePositionalFilenames(t *testing.T) {
+	args := buildArgs(Config{
+		Repo:          "onnx-community/embeddinggemma-2-ONNX",
+		Revision:      "abc123",
+		AllowPatterns: []string{"onnx/model.onnx", "onnx/model.onnx_data", "tokenizer.json"},
+	})
+	want := []string{
+		"download", "onnx-community/embeddinggemma-2-ONNX",
+		"onnx/model.onnx", "onnx/model.onnx_data", "tokenizer.json",
+		"--revision", "abc123",
+	}
+	if strings.Join(args, "\x00") != strings.Join(want, "\x00") {
+		t.Fatalf("got %v want %v", args, want)
+	}
+}
+
 func TestBuildArgs_ExcludeOnly(t *testing.T) {
 	args := buildArgs(Config{
 		Repo:            "beclab/embeddinggemma-300m",

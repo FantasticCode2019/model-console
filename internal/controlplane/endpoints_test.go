@@ -38,7 +38,7 @@ func endpointsFixtureMode(t *testing.T, kind config.EngineKind, mode string, mut
 		env["MODEL_SOURCE"] = "ollama://llama3:8b"
 	case config.EngineLlamaCpp:
 		env["MODEL_SOURCE"] = "hf://Qwen/Qwen2.5-7B-Instruct --include demo.gguf --revision 0123456789abcdef0123456789abcdef01234567"
-	case config.EngineEmbed, config.EngineClipEmbed:
+	case config.EngineEmbed, config.EngineClipEmbed, config.EngineMultimodalEmbed:
 		env["MODEL_MODE"] = "embedding"
 		env["MODEL_SOURCE"] = "https://example.com/model.tgz#sha256=" + strings.Repeat("a", 64)
 		env["MODEL_SOURCE_LOCAL"] = "/data/model"
@@ -628,6 +628,7 @@ func TestEndpoints_CatalogIsTheModeRouteTable(t *testing.T) {
 		mode config.ModelType
 	}{
 		{config.EngineEmbed, config.ModelEmbedding},
+		{config.EngineMultimodalEmbed, config.ModelEmbedding},
 		{config.EngineRerank, config.ModelRerank},
 		{config.EngineOCR, config.ModelOCR},
 		{config.EngineSystemOne, config.ModelSystemOne},
@@ -969,6 +970,22 @@ func TestEndpoints_EngineSpecAbsentIsSilent(t *testing.T) {
 	for _, e := range list.Endpoints {
 		if e.Group == groupEngine {
 			t.Errorf("unexpected engine-reported row: %s %s", e.Method, e.Path)
+		}
+	}
+}
+
+func TestEndpointsFreeTokenChat(t *testing.T) {
+	s := endpointsFixtureMode(t, config.EngineFreeToken, "chat", func(o *Options) {
+		o.DataPlane = func(_ *http.ServeMux) {}
+	})
+	list := parseEndpoints(t, get(t, s, "/api/endpoints").Body)
+	if list.EngineKind != "freetoken" {
+		t.Fatalf("kind = %q", list.EngineKind)
+	}
+	for _, path := range []string{"/v1/chat/completions", "/v1/responses", "/v1/messages"} {
+		e := findByPath(t, list, "POST", path)
+		if !e.Available {
+			t.Errorf("%s unavailable: %v", path, e.Reasons)
 		}
 	}
 }

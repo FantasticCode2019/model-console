@@ -8,17 +8,20 @@ type EngineKind string
 // EngineKind values. The set is closed; AllEngineKinds is the canonical
 // slice form used for env validation.
 const (
-	EngineOllama    EngineKind = "ollama"
-	EngineVLLM      EngineKind = "vllm"
-	EngineLlamaCpp  EngineKind = "llamacpp"
-	EngineSGLang    EngineKind = "sglang"
-	EngineEmbed     EngineKind = "embed"
-	EngineClipEmbed EngineKind = "clipembed"
-	EngineAudio     EngineKind = "audio"
-	EngineOCR       EngineKind = "ocr"
-	EngineRerank    EngineKind = "rerank"
-	EngineMusic     EngineKind = "music"
-	EngineSystemOne EngineKind = "systemone"
+	EngineOllama          EngineKind = "ollama"
+	EngineVLLM            EngineKind = "vllm"
+	EngineLlamaCpp        EngineKind = "llamacpp"
+	EngineSGLang          EngineKind = "sglang"
+	EngineFreeToken       EngineKind = "freetoken"
+	EngineStrata          EngineKind = "strata"
+	EngineEmbed           EngineKind = "embed"
+	EngineClipEmbed       EngineKind = "clipembed"
+	EngineMultimodalEmbed EngineKind = "multimodalembed"
+	EngineAudio           EngineKind = "audio"
+	EngineOCR             EngineKind = "ocr"
+	EngineRerank          EngineKind = "rerank"
+	EngineMusic           EngineKind = "music"
+	EngineSystemOne       EngineKind = "systemone"
 )
 
 // AllEngineKinds lists every supported engine; used for env validation.
@@ -27,8 +30,11 @@ var AllEngineKinds = []string{
 	string(EngineVLLM),
 	string(EngineLlamaCpp),
 	string(EngineSGLang),
+	string(EngineFreeToken),
+	string(EngineStrata),
 	string(EngineEmbed),
 	string(EngineClipEmbed),
+	string(EngineMultimodalEmbed),
 	string(EngineAudio),
 	string(EngineOCR),
 	string(EngineRerank),

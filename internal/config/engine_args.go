@@ -58,11 +58,15 @@ func ParseEngineArgs(kind EngineKind, raw string) (EngineArgs, error) {
 		return parseOllamaArgs(raw)
 	case EngineVLLM:
 		return parseCmdlineArgs(raw, vllmKnownFlags)
+	case EngineFreeToken:
+		return parseCmdlineArgs(raw, freetokenKnownFlags)
+	case EngineStrata:
+		return parseCmdlineArgs(raw, strataKnownFlags)
 	case EngineSGLang:
 		return parseCmdlineArgs(raw, sglangKnownFlags)
 	case EngineLlamaCpp:
 		return parseLlamacppArgs(raw)
-	case EngineEmbed, EngineClipEmbed, EngineAudio, EngineOCR, EngineRerank, EngineMusic, EngineSystemOne:
+	case EngineEmbed, EngineClipEmbed, EngineMultimodalEmbed, EngineAudio, EngineOCR, EngineRerank, EngineMusic, EngineSystemOne:
 		// ENGINE_ARGS are set on the engine container (llamacpp for ocr), not llm-init.
 		args := EngineArgs{Raw: raw, Known: map[string]string{}}
 		if strings.TrimSpace(raw) == "" {
