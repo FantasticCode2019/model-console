@@ -18,6 +18,8 @@ func TestDeriveContextSize_PerEngineFlag(t *testing.T) {
 		{"vllm eq form", EngineVLLM, "--max-model-len=131072", 131072, true},
 		{"sglang", EngineSGLang, "--context-length 16384 --tp 1", 16384, true},
 		{"ollama", EngineOllama, "OLLAMA_NUM_CTX=4096 OLLAMA_KEEP_ALIVE=30m", 4096, true},
+		{"ollama context length", EngineOllama, "OLLAMA_CONTEXT_LENGTH=131072 OLLAMA_NUM_PARALLEL=1", 131072, true},
+		{"ollama num_ctx wins over context length", EngineOllama, "OLLAMA_CONTEXT_LENGTH=131072 OLLAMA_NUM_CTX=4096", 4096, true},
 
 		{"llamacpp no ctx flag", EngineLlamaCpp, "-ngl all -fa on", 0, false},
 		{"vllm no len flag", EngineVLLM, "--dtype bfloat16", 0, false},
@@ -175,6 +177,30 @@ func TestSyncContextSizeFromEngineArgs_KeepsValueWhenFlagsSaySilent(t *testing.T
 	}
 	if cfg.Spec.ContextSize != 32768 {
 		t.Errorf("ContextSize = %d, want the stored 32768", cfg.Spec.ContextSize)
+	}
+}
+
+func TestNormalizeSpecForEngine_OllamaContextLength(t *testing.T) {
+	t.Parallel()
+	cfg := &Config{
+		Engine: Engine{Kind: EngineOllama},
+		Spec: ModelSpec{
+			Name: "gemma4:26b", Mode: "chat",
+			EngineArgs: "OLLAMA_CONTEXT_LENGTH=131072 OLLAMA_FLASH_ATTENTION=1 OLLAMA_KV_CACHE_TYPE=q8_0 OLLAMA_NUM_PARALLEL=1",
+		},
+	}
+	changed, err := NormalizeSpecForEngine(cfg)
+	if err != nil {
+		t.Fatalf("NormalizeSpecForEngine: %v", err)
+	}
+	if !changed {
+		t.Fatal("expected the card to gain a window and an output ceiling")
+	}
+	if cfg.Spec.ContextSize != 131072 {
+		t.Errorf("ContextSize = %d, want 131072", cfg.Spec.ContextSize)
+	}
+	if cfg.Spec.MaxOutputToks != 32768 {
+		t.Errorf("MaxOutputToks = %d, want 32768", cfg.Spec.MaxOutputToks)
 	}
 }
 

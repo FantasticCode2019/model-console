@@ -41,6 +41,27 @@ func TestParseEngineArgs_OllamaQuotedValue(t *testing.T) {
 	}
 }
 
+func TestParseEngineArgs_OllamaContextLength(t *testing.T) {
+	t.Parallel()
+	got, err := ParseEngineArgs(EngineOllama,
+		"OLLAMA_CONTEXT_LENGTH=131072 OLLAMA_FLASH_ATTENTION=1 OLLAMA_KV_CACHE_TYPE=q8_0 OLLAMA_NUM_PARALLEL=1")
+	if err != nil {
+		t.Fatalf("err: %v", err)
+	}
+	wantKnown := map[string]string{
+		"context_length":  "131072",
+		"flash_attention": "1",
+		"kv_cache_type":   "q8_0",
+		"num_parallel":    "1",
+	}
+	if !reflect.DeepEqual(got.Known, wantKnown) {
+		t.Errorf("Known = %v, want %v", got.Known, wantKnown)
+	}
+	if len(got.Unknown) != 0 {
+		t.Errorf("Unknown = %v, want []", got.Unknown)
+	}
+}
+
 func TestParseEngineArgs_OllamaUnknownPassthrough(t *testing.T) {
 	t.Parallel()
 	got, err := ParseEngineArgs(EngineOllama,

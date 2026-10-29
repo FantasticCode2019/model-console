@@ -36,12 +36,13 @@ func DerivePoolTokens(kind EngineKind, args EngineArgs) (int, bool) {
 		}
 		return n, true
 	case EngineOllama:
-		// Ollama launches its runner with num_ctx * num_parallel
-		// (server/sched.go effectiveLlamaServerContext), so the pool is
-		// the product -- but only when both are pinned. It also lowers
-		// either one silently when memory is short, which is what makes
-		// the /api/ps reading worth more than this.
-		ctx, okCtx := args.GetInt("num_ctx")
+		// Ollama launches its runner with the context window times
+		// num_parallel (server/sched.go effectiveLlamaServerContext), so
+		// the pool is the product -- but only when both are pinned. The
+		// window is OLLAMA_NUM_CTX or OLLAMA_CONTEXT_LENGTH. Ollama also
+		// lowers either number silently when memory is short, which is
+		// what makes the /api/ps reading worth more than this.
+		ctx, okCtx := ollamaContextWindow(args)
 		par, okPar := args.GetInt("num_parallel")
 		if !okCtx || !okPar || ctx <= 0 || par <= 0 {
 			return 0, false

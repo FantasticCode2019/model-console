@@ -15,6 +15,7 @@ package config
 // GetFloat.
 var ollamaKnownEnvKeys = map[string]string{
 	"OLLAMA_NUM_CTX":           "num_ctx",
+	"OLLAMA_CONTEXT_LENGTH":    "context_length", // daemon default window; not injected on /api/chat
 	"OLLAMA_KEEP_ALIVE":        "keep_alive",
 	"OLLAMA_NUM_PARALLEL":      "num_parallel",
 	"OLLAMA_NUM_THREAD":        "num_thread",
@@ -199,11 +200,11 @@ var sglangKnownFlags = map[string]string{
 // renaming a key there without renaming it here would leave the window
 // underivable, with nothing but a missing card field to say so. llamacpp
 // is absent because its flag needs arithmetic; see
-// deriveLlamacppContextSize.
+// deriveLlamacppContextSize. Ollama is absent because OLLAMA_NUM_CTX and
+// OLLAMA_CONTEXT_LENGTH are both the window; see ollamaContextWindow.
 var contextSizeKeys = map[EngineKind]string{
 	EngineVLLM:   "max_model_len",
 	EngineSGLang: "context_length",
-	EngineOllama: "num_ctx",
 }
 
 // maxConcurrencyKeys names, per engine, the normalised key above that
